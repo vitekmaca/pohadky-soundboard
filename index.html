@@ -352,18 +352,16 @@ const photoIcons = {
 // NOTE: Icons marked "placeholder" below are simple originals standing in until
 // you drop in your own images — see the note under the page for how to swap them.
 const stories = [
-  { id:'mulan',    title:'Mulan',                 fileId:'1i0aS8shbvQ_wcWdXuGr9UIWvVNE7_lIO', icon: photoIcons.mulan, durationText:'21:25' },
-  { id:'ruzenka',  title:'Šípková Růženka',        fileId:'1qy6CYuUgIs5Nu6WPWVEgIfIBlX_qtupi', icon: photoIcons.ruzenka, durationText:'27:22' },
-  { id:'aladin',   title:'Aladin',                 fileId:'1NSFIfagN-1w5CP_OI-AlLbllGdbyAA2_', icon: photoIcons.aladin, durationText:'21:41' },
-  { id:'priserky', title:'Příšerky s.r.o.',        fileId:'1QaP2XT8elSo_DARsIqIdXDC6X9V8Hufz', icon: photoIcons.priserky, durationText:'19:25' },
-  { id:'vajicko',  title:'Vajíčko',                fileId:'11MdMU7EXh5KTsDY8VkaYamZnvd_gjnpG', icon: photoIcons.vajicko, durationText:'9:04' },
-  { id:'dedecek',  title:'Dědeček',                fileId:'1XEX2m54AABIQM3B7W12an8IBu2zelFOx', icon: photoIcons.dedecek, durationText:'7:21' },
-  { id:'chameleon',title:'Chameleon',              fileId:'1VieBhqXwcmoBBWB1JHbZUYvDKn1YkY10', icon: photoIcons.chameleon, durationText:'5:38' },
-  { id:'krtek',    title:'Krtek',                  fileId:'1pemIVV9CSIkiHtTfI3a-GCl-u8mgH3dE', icon: photoIcons.krtek, durationText:'3:56' },
-  { id:'hroch',    title:'Hroch, který měl škytavku', fileId: null, icon: photoIcons.hroch },
+  { id:'mulan',    title:'Mulan',                 file:'audio/mulan.mp3', icon: photoIcons.mulan, durationText:'21:25' },
+  { id:'ruzenka',  title:'Šípková Růženka',        file:'audio/ruzenka.mp3', icon: photoIcons.ruzenka, durationText:'27:22' },
+  { id:'aladin',   title:'Aladin',                 file:'audio/aladin.mp3', icon: photoIcons.aladin, durationText:'21:41' },
+  { id:'priserky', title:'Příšerky s.r.o.',        file:'audio/priserky.mp3', icon: photoIcons.priserky, durationText:'19:25' },
+  { id:'vajicko',  title:'Vajíčko',                file:'audio/vajicko.m4a', icon: photoIcons.vajicko, durationText:'9:04' },
+  { id:'dedecek',  title:'Dědeček',                file:'audio/dedecek.m4a', icon: photoIcons.dedecek, durationText:'7:21' },
+  { id:'chameleon',title:'Chameleon',              file:'audio/chameleon.m4a', icon: photoIcons.chameleon, durationText:'5:38' },
+  { id:'krtek',    title:'Krtek',                  file:'audio/krtek.m4a', icon: photoIcons.krtek, durationText:'3:56' },
+  { id:'hroch',    title:'Hroch, který měl škytavku', file: null, icon: photoIcons.hroch },
 ];
-
-function driveUrl(id){ return `https://drive.google.com/uc?export=download&id=${id}`; }
 
 // ---- render grid ----
 const grid = document.getElementById('grid');
@@ -373,9 +371,9 @@ stories.forEach(s=>{
   card.id = 'card-'+s.id;
   card.innerHTML = `
     <div class="status-dot"></div>
-    ${s.fileId ? '' : '<div class="soon-badge">brzy</div>'}
+    ${s.file ? '' : '<div class="soon-badge">brzy</div>'}
     <div class="icon-wrap">${s.icon}</div>
-    <div class="title">${s.title}${s.fileId ? `<div class="card-time" id="time-${s.id}">${s.durationText || '--:--'}</div>` : ''}</div>
+    <div class="title">${s.title}${s.file ? `<div class="card-time" id="time-${s.id}">${s.durationText || '--:--'}</div>` : ''}</div>
   `;
   card.addEventListener('click', ()=> selectStory(s));
   grid.appendChild(card);
@@ -412,7 +410,7 @@ function clearCardStates(){
 }
 
 function selectStory(s){
-  if(!s.fileId){
+  if(!s.file){
     // no recording yet for this story
     audio.pause();
     clearCardStates();
@@ -446,7 +444,7 @@ function selectStory(s){
   }
 
   cardEl.classList.add('loading');
-  audio.src = driveUrl(s.fileId);
+  audio.src = s.file;
   audio.currentTime = 0;
   audio.play().then(()=>{
     cardEl.classList.remove('loading');
